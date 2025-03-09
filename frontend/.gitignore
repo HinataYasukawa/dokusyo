@@ -1,0 +1,16 @@
+# Node.js の依存パッケージ（超大量なので絶対に除外）
+node_modules/
+
+# ビルドファイル（Git に不要）
+build/
+dist/
+
+# 環境変数ファイル（APIキーなどの機密情報を含む）
+.env
+.env.local
+.env.development
+.env.production
+
+# OS ごとの不要なファイル
+.DS_Store  # macOS
+Thumbs.db  # Windows
