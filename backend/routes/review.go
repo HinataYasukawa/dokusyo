@@ -9,4 +9,5 @@ import (
 func SetupRoutes(router *gin.Engine) {
     router.GET("/reviews", controllers.GetReviews)
     router.POST("/reviews", controllers.CreateReview)
+	router.DELETE("/reviews/:id", controllers.DeleteReview)
 }

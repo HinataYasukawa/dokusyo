@@ -40,3 +40,21 @@ func CreateReview(c *gin.Context) {
     database.DB.Create(&review)
     c.JSON(http.StatusCreated, review)
 }
+
+// レビューの削除
+func DeleteReview(c *gin.Context) {
+	id := c.Param("id")
+
+	var review models.Review
+	if err := database.DB.First(&review, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "レビューが見つかりません"})
+		return
+	}
+
+	if err := database.DB.Delete(&review).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "レビューの削除に失敗しました"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "レビューを削除しました"})
+}
