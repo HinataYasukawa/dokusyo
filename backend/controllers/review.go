@@ -58,3 +58,30 @@ func DeleteReview(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "レビューを削除しました"})
 }
+
+//レビューの編集
+func UpdateReview(c *gin.Context) {
+    id := c.Param("id")
+
+    var existingReview models.Review
+    if err := database.DB.First(&existingReview, id).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "レビューが見つかりません"})
+        return
+    }
+
+    var updatedReview models.Review
+    if err := c.ShouldBindJSON(&updatedReview); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "リクエストの形式が正しくありません"})
+        return
+    }
+
+    existingReview.BookTitle = updatedReview.BookTitle
+    existingReview.Content = updatedReview.Content
+
+    if err := database.DB.Save(&existingReview).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "レビューの更新に失敗しました"})
+        return
+    }
+
+    c.JSON(http.StatusOK, existingReview)
+}
