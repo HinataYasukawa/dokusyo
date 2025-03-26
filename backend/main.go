@@ -32,7 +32,7 @@ func main() {
     database.ConnectDB()
 
     // マイグレーション
-    err := database.DB.AutoMigrate(&models.Review{})
+    err := database.DB.AutoMigrate(&models.User{}, &models.Review{})
     if err != nil {
         log.Fatal("Migration failed:", err)
     }
