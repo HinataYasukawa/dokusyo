@@ -11,6 +11,8 @@ interface Review {
 const ReviewList: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [newBookTitle, setNewBookTitle] = useState("");
+  const [newContent, setNewContent] = useState("");
 
   // データ取得
   useEffect(() => {
@@ -75,8 +77,58 @@ const ReviewList: React.FC = () => {
     }
   };
 
+  //新規投稿
+  const handleCreate = () => {
+    if (!newBookTitle || !newContent) {
+      alert("タイトルと内容を入力してください。");
+      return;
+    }
+
+    const newReview = {
+      BookTitle: newBookTitle,
+      Content: newContent,
+    };
+
+    axios
+      .post("http://localhost:8080/reviews", newReview)
+      .then((response) => {
+        alert("レビューを投稿しました。");
+        setNewBookTitle("");
+        setNewContent("");
+        fetchReviews();
+      })
+      .catch((error) => {
+        console.error("Error creating review:", error);
+        alert("投稿に失敗しました");
+      });
+  };
+
   return (
     <div>
+      <h2>新しいレビューの投稿</h2>
+      <div>
+        <label>
+          タイトル:
+          <input
+            type="text"
+            value={newBookTitle}
+            onChange={(e) => setNewBookTitle(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          内容:
+          <input
+            type="text"
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+          />
+        </label>
+        <br />
+        <button onClick={handleCreate}>投稿</button>
+      </div>
+      <hr />
+
       <h2>レビュー一覧</h2>
 
       {editingReview && (
